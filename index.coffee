@@ -9,6 +9,10 @@ browserify = require('browserify')
 coffeeify = require('coffeeify')
 babelify = require("babelify")
 uglifyjs = require("uglify-js")
+try
+  lessify_ = require('lessify')
+catch error
+  lessify_ = null
 
 
 uglify = (instream) ->
@@ -37,6 +41,7 @@ uglify = (instream) ->
 module.exports.jspack = (entry, bundlepath, {
     require = null
     external = []
+    lessify = false
     debug = false
 }) ->
     bfy = browserify(entry, {
@@ -50,16 +55,22 @@ module.exports.jspack = (entry, bundlepath, {
     for extfile in external
         bfy.external(extfile)
 
-    jsstream = bfy
-        .transform(coffeeify)
-        .transform(babelify, {
-            presets: ["env"]
-            # Yes, it is needed to repeat the 'extensions' option here
-            extensions: [".coffee"]
-            comments: false
-            compact: false
-        })
-        .bundle()
+    bfy.transform(coffeeify)
+
+    if lessify
+        if not lessify_
+            throw new Error("'lessify' is not installed")
+        bfy.transform(lessify_, {global: true})
+
+    bfy.transform(babelify, {
+        presets: ["env"]
+        # Yes, it is needed to repeat the 'extensions' option here
+        extensions: [".coffee"]
+        comments: false
+        compact: false
+    })
+
+    jsstream = bfy.bundle()
 
     if not debug
         jsstream = await uglify(jsstream)

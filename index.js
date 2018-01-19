@@ -4,7 +4,7 @@
   // Copyright (C) 2018-present Dario Giovannetti <dev@dariogiovannetti.net>
   // Licensed under MIT
   // https://github.com/kynikos/browserify-helpers/blob/master/LICENSE
-  var Readable, babelify, browserify, coffeeify, fs, uglify, uglifyjs;
+  var Readable, babelify, browserify, coffeeify, error, fs, lessify_, uglify, uglifyjs;
 
   fs = require('fs');
 
@@ -17,6 +17,13 @@
   babelify = require("babelify");
 
   uglifyjs = require("uglify-js");
+
+  try {
+    lessify_ = require('lessify');
+  } catch (error1) {
+    error = error1;
+    lessify_ = null;
+  }
 
   uglify = function(instream) {
     var jscode, outstream, uglifying;
@@ -45,7 +52,7 @@
     return uglifying;
   };
 
-  module.exports.jspack = async function(entry, bundlepath, {require = null, external = [], debug = false}) {
+  module.exports.jspack = async function(entry, bundlepath, {require = null, external = [], lessify = false, debug = false}) {
     var bfy, extfile, i, jsstream, len, outstream;
     bfy = browserify(entry, {
       extensions: ['.coffee'],
@@ -58,13 +65,23 @@
       extfile = external[i];
       bfy.external(extfile);
     }
-    jsstream = bfy.transform(coffeeify).transform(babelify, {
+    bfy.transform(coffeeify);
+    if (lessify) {
+      if (!lessify_) {
+        throw new Error("'lessify' is not installed");
+      }
+      bfy.transform(lessify_, {
+        global: true
+      });
+    }
+    bfy.transform(babelify, {
       presets: ["env"],
       // Yes, it is needed to repeat the 'extensions' option here
       extensions: [".coffee"],
       comments: false,
       compact: false
-    }).bundle();
+    });
+    jsstream = bfy.bundle();
     if (!debug) {
       jsstream = (await uglify(jsstream));
     }

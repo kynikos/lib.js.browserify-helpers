@@ -22,5 +22,8 @@
   },
   "devDependencies": {
     "coffeescript": "^2.1.1"
+  },
+  "optionalDependencies": {
+    "lessify": "^1.0.1"
   }
 }
