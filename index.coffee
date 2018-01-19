@@ -63,13 +63,16 @@ module.exports.jspack = (entry, bundlepath, {
     for extfile in external
         bfy.external(extfile)
 
-    jsstream = bfy.transform(coffeeify).transform(babelify, {
-        presets: ["env"]
-        # Yes, it is needed to repeat the 'extensions' option here
-        extensions: [".coffee"]
-        comments: false
-        compact: false
-    }).bundle()
+    jsstream = bfy
+        .transform(coffeeify)
+        .transform(babelify, {
+            presets: ["env"]
+            # Yes, it is needed to repeat the 'extensions' option here
+            extensions: [".coffee"]
+            comments: false
+            compact: false
+        })
+        .bundle()
 
     if not debug
         jsstream = await uglify(jsstream)
