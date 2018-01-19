@@ -49,7 +49,7 @@ uglify = (instream) ->
 
 module.exports.jspack = (entry, bundlepath, {
     require = null
-    external = null
+    external = []
     debug = false
 }) ->
     bfy = browserify(entry, {
@@ -60,8 +60,8 @@ module.exports.jspack = (entry, bundlepath, {
     if require
         bfy.require(require)
 
-    if external
-        bfy.external(external)
+    for extfile in external
+        bfy.external(extfile)
 
     jsstream = bfy.transform(coffeeify).transform(babelify, {
         presets: ["env"]
