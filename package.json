@@ -1,0 +1,18 @@
+{
+  "name": "@kynikos/browserify-helpers",
+  "version": "1.0.0",
+  "author": "Dario Giovannetti",
+  "description": "Browserify helpers.",
+  "scripts": {
+    "compile": "coffee --compile index.coffee"
+  },
+  "dependencies": {
+    "babelify": "^8.0.0",
+    "browserify": "^15.2.0",
+    "coffeeify": "^3.0.1",
+    "uglify-js": "^3.3.8"
+  },
+  "devDependencies": {
+    "coffeescript": "^2.1.1"
+  }
+}
