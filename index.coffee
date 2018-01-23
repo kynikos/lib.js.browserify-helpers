@@ -3,6 +3,7 @@
 # Licensed under MIT
 # https://github.com/kynikos/browserify-helpers/blob/master/LICENSE
 
+require('babel-polyfill')
 fs = require('fs')
 {Readable} = require('stream')
 browserify = require('browserify')

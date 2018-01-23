@@ -10,6 +10,8 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
   // https://github.com/kynikos/browserify-helpers/blob/master/LICENSE
   var Readable, babelify, browserify, coffeeify, error, fs, lessify_, uglify, uglifyjs;
 
+  require('babel-polyfill');
+
   fs = require('fs');
 
   var _require = require('stream');

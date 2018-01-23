@@ -15,6 +15,7 @@
     "compile": "coffee --compile --transpile index.coffee"
   },
   "dependencies": {
+    "babel-polyfill": "^6.26.0",
     "babelify": "^8.0.0",
     "browserify": "^15.2.0",
     "coffeeify": "^3.0.1",
