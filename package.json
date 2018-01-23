@@ -1,6 +1,6 @@
 {
   "name": "@kynikos/browserify-helpers",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "author": "Dario Giovannetti",
   "description": "Browserify helpers.",
   "license": "MIT",
