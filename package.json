@@ -12,20 +12,25 @@
     "browserify"
   ],
   "scripts": {
-    "compile": "coffee --compile index.coffee"
+    "compile": "coffee --compile --transpile index.coffee"
   },
   "dependencies": {
     "babelify": "^8.0.0",
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
     "browserify": "^15.2.0",
     "coffeeify": "^3.0.1",
     "uglify-js": "^3.3.8"
   },
   "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
     "coffeescript": "^2.1.1"
   },
   "optionalDependencies": {
     "lessify": "^1.0.1"
+  },
+  "babel": {
+    "presets": [
+      "env"
+    ]
   }
 }
