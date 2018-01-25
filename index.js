@@ -8,7 +8,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
   // Copyright (C) 2018-present Dario Giovannetti <dev@dariogiovannetti.net>
   // Licensed under MIT
   // https://github.com/kynikos/browserify-helpers/blob/master/LICENSE
-  var Readable, babelify, browserify, coffeeify, error, fs, lessify_, uglify, uglifyjs;
+  var Readable, babelify, browserify, coffeeify, error, fs, lessify_, sassify_, uglify, uglifyjs;
 
   require('babel-polyfill');
 
@@ -26,6 +26,13 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
   babelify = require("babelify");
 
   uglifyjs = require("uglify-js");
+
+  try {
+    sassify_ = require('sassify');
+  } catch (error1) {
+    error = error1;
+    sassify_ = null;
+  }
 
   try {
     lessify_ = require('lessify');
@@ -67,6 +74,8 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
           require = _ref$require === undefined ? null : _ref$require,
           _ref$external = _ref.external,
           external = _ref$external === undefined ? [] : _ref$external,
+          _ref$sassify = _ref.sassify,
+          sassify = _ref$sassify === undefined ? false : _ref$sassify,
           _ref$lessify = _ref.lessify,
           lessify = _ref$lessify === undefined ? false : _ref$lessify,
           _ref$debug = _ref.debug,
@@ -90,24 +99,42 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
               }
               bfy.transform(coffeeify);
 
-              if (!lessify) {
+              if (!sassify) {
                 _context.next = 8;
                 break;
               }
 
-              if (lessify_) {
+              if (sassify_) {
                 _context.next = 7;
+                break;
+              }
+
+              throw new Error("'sassify' is not installed");
+
+            case 7:
+              bfy.transform(sassify_, {
+                global: true
+              });
+
+            case 8:
+              if (!lessify) {
+                _context.next = 12;
+                break;
+              }
+
+              if (lessify_) {
+                _context.next = 11;
                 break;
               }
 
               throw new Error("'lessify' is not installed");
 
-            case 7:
+            case 11:
               bfy.transform(lessify_, {
                 global: true
               });
 
-            case 8:
+            case 12:
               bfy.transform(babelify, {
                 presets: ["env"],
                 // Yes, it is needed to repeat the 'extensions' option here
@@ -118,17 +145,17 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
               jsstream = bfy.bundle();
 
               if (debug) {
-                _context.next = 14;
+                _context.next = 18;
                 break;
               }
 
-              _context.next = 13;
+              _context.next = 17;
               return uglify(jsstream);
 
-            case 13:
+            case 17:
               jsstream = _context.sent;
 
-            case 14:
+            case 18:
               outstream = jsstream.pipe(fs.createWriteStream(bundlepath));
               return _context.abrupt('return', new Promise(function (resolve, reject) {
                 outstream.on('close', function () {
@@ -139,7 +166,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                 });
               }));
 
-            case 16:
+            case 20:
             case 'end':
               return _context.stop();
           }

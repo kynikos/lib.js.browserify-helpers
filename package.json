@@ -27,7 +27,8 @@
     "coffeescript": "^2.1.1"
   },
   "optionalDependencies": {
-    "lessify": "^1.0.1"
+    "lessify": "^1.0.1",
+    "sassify": "^4.0.1"
   },
   "babel": {
     "presets": [
