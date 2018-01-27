@@ -18,6 +18,10 @@ try
     lessify_ = require('lessify')
 catch error
     lessify_ = null
+try
+    licensify_ = require('licensify')
+catch error
+    licensify_ = null
 
 
 uglify = (instream) ->
@@ -30,7 +34,8 @@ uglify = (instream) ->
     )
     uglifying = new Promise((resolve, reject) ->
         instream.on('end', ->
-            minjs = uglifyjs.minify(jscode)
+            # NOTE: Also Uglify's 'preamble' option is interesting
+            minjs = uglifyjs.minify(jscode, {output: {comments: 'some'}})
             outstream.push(minjs.code)
             # https://stackoverflow.com/a/22085851
             outstream.push(null)
@@ -49,6 +54,7 @@ module.exports.jspack = (entry, bundlepath, {
     sassify = false
     lessify = false
     debug = false
+    licensify = false
 }) ->
     bfy = browserify(entry, {
         extensions: ['.coffee']
@@ -72,6 +78,11 @@ module.exports.jspack = (entry, bundlepath, {
         if not lessify_
             throw new Error("'lessify' is not installed")
         bfy.transform(lessify_, {global: true})
+
+    if licensify
+        if not licensify_
+            throw new Error("'licensify' is not installed")
+        bfy.plugin(licensify_)
 
     bfy.transform(babelify, {
         presets: ["env"]

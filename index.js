@@ -8,7 +8,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
   // Copyright (C) 2018-present Dario Giovannetti <dev@dariogiovannetti.net>
   // Licensed under MIT
   // https://github.com/kynikos/browserify-helpers/blob/master/LICENSE
-  var Readable, babelify, browserify, coffeeify, error, fs, lessify_, sassify_, uglify, uglifyjs;
+  var Readable, babelify, browserify, coffeeify, error, fs, lessify_, licensify_, sassify_, uglify, uglifyjs;
 
   require('babel-polyfill');
 
@@ -41,6 +41,13 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
     lessify_ = null;
   }
 
+  try {
+    licensify_ = require('licensify');
+  } catch (error1) {
+    error = error1;
+    licensify_ = null;
+  }
+
   uglify = function uglify(instream) {
     var jscode, outstream, uglifying;
     jscode = "";
@@ -55,7 +62,12 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
     uglifying = new Promise(function (resolve, reject) {
       instream.on('end', function () {
         var minjs;
-        minjs = uglifyjs.minify(jscode);
+        // NOTE: Also Uglify's 'preamble' option is interesting
+        minjs = uglifyjs.minify(jscode, {
+          output: {
+            comments: 'some'
+          }
+        });
         outstream.push(minjs.code);
         // https://stackoverflow.com/a/22085851
         outstream.push(null);
@@ -79,7 +91,9 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
           _ref$lessify = _ref.lessify,
           lessify = _ref$lessify === undefined ? false : _ref$lessify,
           _ref$debug = _ref.debug,
-          debug = _ref$debug === undefined ? false : _ref$debug;
+          debug = _ref$debug === undefined ? false : _ref$debug,
+          _ref$licensify = _ref.licensify,
+          licensify = _ref$licensify === undefined ? false : _ref$licensify;
 
       var bfy, extfile, i, jsstream, len, outstream;
       return regeneratorRuntime.wrap(function _callee$(_context) {
@@ -135,6 +149,22 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
               });
 
             case 12:
+              if (!licensify) {
+                _context.next = 16;
+                break;
+              }
+
+              if (licensify_) {
+                _context.next = 15;
+                break;
+              }
+
+              throw new Error("'licensify' is not installed");
+
+            case 15:
+              bfy.plugin(licensify_);
+
+            case 16:
               bfy.transform(babelify, {
                 presets: ["env"],
                 // Yes, it is needed to repeat the 'extensions' option here
@@ -145,17 +175,17 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
               jsstream = bfy.bundle();
 
               if (debug) {
-                _context.next = 18;
+                _context.next = 22;
                 break;
               }
 
-              _context.next = 17;
+              _context.next = 21;
               return uglify(jsstream);
 
-            case 17:
+            case 21:
               jsstream = _context.sent;
 
-            case 18:
+            case 22:
               outstream = jsstream.pipe(fs.createWriteStream(bundlepath));
               return _context.abrupt('return', new Promise(function (resolve, reject) {
                 outstream.on('close', function () {
@@ -166,7 +196,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                 });
               }));
 
-            case 20:
+            case 24:
             case 'end':
               return _context.stop();
           }
