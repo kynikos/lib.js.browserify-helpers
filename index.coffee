@@ -11,13 +11,13 @@ coffeeify = require('coffeeify')
 babelify = require("babelify")
 uglifyjs = require("uglify-js")
 try
-  sassify_ = require('sassify')
+    sassify_ = require('sassify')
 catch error
-  sassify_ = null
+    sassify_ = null
 try
-  lessify_ = require('lessify')
+    lessify_ = require('lessify')
 catch error
-  lessify_ = null
+    lessify_ = null
 
 
 uglify = (instream) ->
