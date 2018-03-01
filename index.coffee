@@ -11,6 +11,10 @@ coffeeify = require('coffeeify')
 babelify = require("babelify")
 uglifyjs = require("uglify-js")
 try
+    envify_ = require('envify')
+catch error
+    envify_ = null
+try
     sassify_ = require('sassify')
 catch error
     sassify_ = null
@@ -51,6 +55,8 @@ uglify = (instream) ->
 module.exports.jspack = (entry, bundlepath, {
     require = null
     external = []
+    # Note how 'envify' is then used to configure 'envify_'
+    envify = false
     sassify = false
     lessify = false
     debug = false
@@ -68,6 +74,11 @@ module.exports.jspack = (entry, bundlepath, {
         bfy.external(extfile)
 
     bfy.transform(coffeeify)
+
+    if envify
+        if not envify_
+            throw new Error("'envify' is not installed")
+        bfy.transform(envify_(envify), {global: true})
 
     if sassify
         if not sassify_
