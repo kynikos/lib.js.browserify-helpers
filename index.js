@@ -28,7 +28,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
   uglifyjs = require("uglify-js");
 
   try {
-    envify_ = require('envify');
+    envify_ = require('envify/custom');
   } catch (error1) {
     error = error1;
     envify_ = null;

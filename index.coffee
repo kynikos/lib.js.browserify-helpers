@@ -11,7 +11,7 @@ coffeeify = require('coffeeify')
 babelify = require("babelify")
 uglifyjs = require("uglify-js")
 try
-    envify_ = require('envify')
+    envify_ = require('envify/custom')
 catch error
     envify_ = null
 try
