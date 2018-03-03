@@ -55,7 +55,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
     licensify_ = null;
   }
 
-  uglify = function uglify(instream) {
+  uglify = function uglify(instream, keep_fnames) {
     var jscode, outstream, uglifying;
     jscode = "";
     outstream = new Readable();
@@ -69,11 +69,14 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
     uglifying = new Promise(function (resolve, reject) {
       instream.on('end', function () {
         var minjs;
+        // A way to see all available options is https://skalman.github.io/UglifyJS-online/
         // NOTE: Also Uglify's 'preamble' option is interesting
         minjs = uglifyjs.minify(jscode, {
           output: {
             comments: 'some'
-          }
+          },
+          compress: { keep_fnames: keep_fnames },
+          mangle: { keep_fnames: keep_fnames }
         });
         outstream.push(minjs.code);
         // https://stackoverflow.com/a/22085851
@@ -102,6 +105,8 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
           lessify = _ref$lessify === undefined ? false : _ref$lessify,
           _ref$debug = _ref.debug,
           debug = _ref$debug === undefined ? false : _ref$debug,
+          _ref$uglify_keep_fnam = _ref.uglify_keep_fnames,
+          uglify_keep_fnames = _ref$uglify_keep_fnam === undefined ? false : _ref$uglify_keep_fnam,
           _ref$licensify = _ref.licensify,
           licensify = _ref$licensify === undefined ? false : _ref$licensify;
 
@@ -208,7 +213,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
               }
 
               _context.next = 25;
-              return uglify(jsstream);
+              return uglify(jsstream, uglify_keep_fnames);
 
             case 25:
               jsstream = _context.sent;

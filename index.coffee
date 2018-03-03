@@ -28,7 +28,7 @@ catch error
     licensify_ = null
 
 
-uglify = (instream) ->
+uglify = (instream, keep_fnames) ->
     jscode = ""
     outstream = new Readable()
     instream.on('readable', ->
@@ -38,8 +38,13 @@ uglify = (instream) ->
     )
     uglifying = new Promise((resolve, reject) ->
         instream.on('end', ->
+            # A way to see all available options is https://skalman.github.io/UglifyJS-online/
             # NOTE: Also Uglify's 'preamble' option is interesting
-            minjs = uglifyjs.minify(jscode, {output: {comments: 'some'}})
+            minjs = uglifyjs.minify(jscode, {
+                output: {comments: 'some'}
+                compress: {keep_fnames}
+                mangle: {keep_fnames}
+            })
             outstream.push(minjs.code)
             # https://stackoverflow.com/a/22085851
             outstream.push(null)
@@ -60,6 +65,7 @@ module.exports.jspack = (entry, bundlepath, {
     sassify = false
     lessify = false
     debug = false
+    uglify_keep_fnames = false
     licensify = false
 }) ->
     bfy = browserify(entry, {
@@ -106,7 +112,7 @@ module.exports.jspack = (entry, bundlepath, {
     jsstream = bfy.bundle()
 
     if not debug
-        jsstream = await uglify(jsstream)
+        jsstream = await uglify(jsstream, uglify_keep_fnames)
 
     outstream = jsstream.pipe(fs.createWriteStream(bundlepath))
 
