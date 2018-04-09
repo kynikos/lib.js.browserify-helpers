@@ -8,7 +8,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
   // Copyright (C) 2018-present Dario Giovannetti <dev@dariogiovannetti.net>
   // Licensed under MIT
   // https://github.com/kynikos/browserify-helpers/blob/master/LICENSE
-  var Readable, babelify, browserify, coffeeify, envify_, error, fs, lessify_, licensify_, sassify_, uglify, uglifyjs;
+  var Readable, babelify, browserify, coffeeify_, envify_, error, fs, lessify_, licensify_, sassify_, transform_object_rest_spread, uglify_, uglifyjs;
 
   require('babel-polyfill');
 
@@ -21,11 +21,21 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
   browserify = require('browserify');
 
-  coffeeify = require('coffeeify');
+  babelify = require('babelify');
 
-  babelify = require("babelify");
+  // NOTE: Compiling ES6 may also require the following plugins
+  // transform_es2015_destructuring =
+  //     require('babel-plugin-transform-es2015-destructuring')
+  // transform_es2015_parameters =
+  //     require('babel-plugin-transform-es2015-parameters')
+  transform_object_rest_spread = require('babel-plugin-transform-object-rest-spread');
 
-  uglifyjs = require("uglify-js");
+  try {
+    coffeeify_ = require('coffeeify');
+  } catch (error1) {
+    error = error1;
+    coffeeify_ = null;
+  }
 
   try {
     envify_ = require('envify/custom');
@@ -55,7 +65,17 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
     licensify_ = null;
   }
 
-  uglify = function uglify(instream, keep_fnames) {
+  try {
+    uglifyjs = require('uglify-js');
+  } catch (error1) {
+    error = error1;
+    uglifyjs = null;
+  }
+
+  uglify_ = function uglify_(instream, _ref) {
+    var _ref$keep_fnames = _ref.keep_fnames,
+        keep_fnames = _ref$keep_fnames === undefined ? false : _ref$keep_fnames;
+
     var jscode, outstream, uglifying;
     jscode = "";
     outstream = new Readable();
@@ -78,6 +98,13 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
           compress: { keep_fnames: keep_fnames },
           mangle: { keep_fnames: keep_fnames }
         });
+        if (minjs.error) {
+          // Simply rejecting minjs.error would only show its message and
+          // not the rest of the metadata
+          console.error(minjs.error);
+          reject(minjs.error);
+          return;
+        }
         outstream.push(minjs.code);
         // https://stackoverflow.com/a/22085851
         outstream.push(null);
@@ -91,24 +118,27 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
   };
 
   // Note how 'envify' is then used to configure 'envify_'
+  // Note how 'uglify' is then used to configure 'uglify_'
   module.exports.jspack = function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(entry, bundlepath, _ref) {
-      var _ref$require = _ref.require,
-          require = _ref$require === undefined ? null : _ref$require,
-          _ref$external = _ref.external,
-          external = _ref$external === undefined ? [] : _ref$external,
-          _ref$envify = _ref.envify,
-          envify = _ref$envify === undefined ? false : _ref$envify,
-          _ref$sassify = _ref.sassify,
-          sassify = _ref$sassify === undefined ? false : _ref$sassify,
-          _ref$lessify = _ref.lessify,
-          lessify = _ref$lessify === undefined ? false : _ref$lessify,
-          _ref$debug = _ref.debug,
-          debug = _ref$debug === undefined ? false : _ref$debug,
-          _ref$uglify_keep_fnam = _ref.uglify_keep_fnames,
-          uglify_keep_fnames = _ref$uglify_keep_fnam === undefined ? false : _ref$uglify_keep_fnam,
-          _ref$licensify = _ref.licensify,
-          licensify = _ref$licensify === undefined ? false : _ref$licensify;
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(entry, bundlepath, _ref2) {
+      var _ref2$require = _ref2.require,
+          require = _ref2$require === undefined ? null : _ref2$require,
+          _ref2$external = _ref2.external,
+          external = _ref2$external === undefined ? [] : _ref2$external,
+          _ref2$coffeeify = _ref2.coffeeify,
+          coffeeify = _ref2$coffeeify === undefined ? false : _ref2$coffeeify,
+          _ref2$envify = _ref2.envify,
+          envify = _ref2$envify === undefined ? false : _ref2$envify,
+          _ref2$sassify = _ref2.sassify,
+          sassify = _ref2$sassify === undefined ? false : _ref2$sassify,
+          _ref2$lessify = _ref2.lessify,
+          lessify = _ref2$lessify === undefined ? false : _ref2$lessify,
+          _ref2$debug = _ref2.debug,
+          debug = _ref2$debug === undefined ? false : _ref2$debug,
+          _ref2$licensify = _ref2.licensify,
+          licensify = _ref2$licensify === undefined ? false : _ref2$licensify,
+          _ref2$uglify = _ref2.uglify,
+          uglify = _ref2$uglify === undefined ? false : _ref2$uglify;
 
       var bfy, extfile, i, jsstream, len, outstream;
       return regeneratorRuntime.wrap(function _callee$(_context) {
@@ -116,7 +146,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
           switch (_context.prev = _context.next) {
             case 0:
               bfy = browserify(entry, {
-                extensions: ['.coffee'],
+                extensions: ['.js', '.coffee'],
                 debug: debug
               });
               if (require) {
@@ -126,99 +156,123 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                 extfile = external[i];
                 bfy.external(extfile);
               }
-              bfy.transform(coffeeify);
 
+              if (!coffeeify) {
+                _context.next = 7;
+                break;
+              }
+
+              if (coffeeify_) {
+                _context.next = 6;
+                break;
+              }
+
+              throw new Error("'coffeeify' is not installed");
+
+            case 6:
+              bfy.transform(coffeeify_);
+
+            case 7:
               if (!envify) {
-                _context.next = 8;
+                _context.next = 11;
                 break;
               }
 
               if (envify_) {
-                _context.next = 7;
+                _context.next = 10;
                 break;
               }
 
               throw new Error("'envify' is not installed");
 
-            case 7:
+            case 10:
               bfy.transform(envify_(envify), {
                 global: true
               });
 
-            case 8:
+            case 11:
               if (!sassify) {
-                _context.next = 12;
+                _context.next = 15;
                 break;
               }
 
               if (sassify_) {
-                _context.next = 11;
+                _context.next = 14;
                 break;
               }
 
               throw new Error("'sassify' is not installed");
 
-            case 11:
+            case 14:
               bfy.transform(sassify_, {
                 global: true
               });
 
-            case 12:
+            case 15:
               if (!lessify) {
-                _context.next = 16;
+                _context.next = 19;
                 break;
               }
 
               if (lessify_) {
-                _context.next = 15;
+                _context.next = 18;
                 break;
               }
 
               throw new Error("'lessify' is not installed");
 
-            case 15:
+            case 18:
               bfy.transform(lessify_, {
                 global: true
               });
 
-            case 16:
+            case 19:
               if (!licensify) {
-                _context.next = 20;
+                _context.next = 23;
                 break;
               }
 
               if (licensify_) {
-                _context.next = 19;
+                _context.next = 22;
                 break;
               }
 
               throw new Error("'licensify' is not installed");
 
-            case 19:
+            case 22:
               bfy.plugin(licensify_);
 
-            case 20:
+            case 23:
               bfy.transform(babelify, {
-                presets: ["env"],
+                presets: ['env'],
                 // Yes, it is needed to repeat the 'extensions' option here
-                extensions: [".coffee"],
+                extensions: ['.js', '.coffee'],
+                plugins: [transform_object_rest_spread],
                 comments: false,
                 compact: false
               });
               jsstream = bfy.bundle();
 
-              if (debug) {
-                _context.next = 26;
+              if (!uglify) {
+                _context.next = 31;
                 break;
               }
 
-              _context.next = 25;
-              return uglify(jsstream, uglify_keep_fnames);
+              if (uglifyjs) {
+                _context.next = 28;
+                break;
+              }
 
-            case 25:
+              throw new Error("'uglify-js' is not installed");
+
+            case 28:
+              _context.next = 30;
+              return uglify_(jsstream, uglify);
+
+            case 30:
               jsstream = _context.sent;
 
-            case 26:
+            case 31:
               outstream = jsstream.pipe(fs.createWriteStream(bundlepath));
               return _context.abrupt('return', new Promise(function (resolve, reject) {
                 outstream.on('close', function () {
@@ -229,7 +283,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                 });
               }));
 
-            case 28:
+            case 33:
             case 'end':
               return _context.stop();
           }
@@ -238,7 +292,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
     }));
 
     return function (_x, _x2, _x3) {
-      return _ref2.apply(this, arguments);
+      return _ref3.apply(this, arguments);
     };
   }();
 }).call(undefined);
