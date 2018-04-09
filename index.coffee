@@ -7,8 +7,15 @@ require('babel-polyfill')
 fs = require('fs')
 {Readable} = require('stream')
 browserify = require('browserify')
+babelify = require('babelify')
+# NOTE: Compiling ES6 may also require the following plugins
+# transform_es2015_destructuring =
+#     require('babel-plugin-transform-es2015-destructuring')
+# transform_es2015_parameters =
+#     require('babel-plugin-transform-es2015-parameters')
+transform_object_rest_spread =
+    require('babel-plugin-transform-object-rest-spread')
 coffeeify = require('coffeeify')
-babelify = require("babelify")
 uglifyjs = require("uglify-js")
 try
     envify_ = require('envify/custom')
@@ -69,7 +76,7 @@ module.exports.jspack = (entry, bundlepath, {
     licensify = false
 }) ->
     bfy = browserify(entry, {
-        extensions: ['.coffee']
+        extensions: ['.js', '.coffee']
         debug: debug
     })
 
@@ -102,9 +109,12 @@ module.exports.jspack = (entry, bundlepath, {
         bfy.plugin(licensify_)
 
     bfy.transform(babelify, {
-        presets: ["env"]
+        presets: ['env']
         # Yes, it is needed to repeat the 'extensions' option here
-        extensions: [".coffee"]
+        extensions: ['.js', '.coffee']
+        plugins: [
+            transform_object_rest_spread
+        ]
         comments: false
         compact: false
     })
