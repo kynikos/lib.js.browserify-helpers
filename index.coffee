@@ -16,7 +16,6 @@ babelify = require('babelify')
 transform_object_rest_spread =
     require('babel-plugin-transform-object-rest-spread')
 coffeeify = require('coffeeify')
-uglifyjs = require("uglify-js")
 try
     envify_ = require('envify/custom')
 catch error
@@ -33,9 +32,13 @@ try
     licensify_ = require('licensify')
 catch error
     licensify_ = null
+try
+    uglifyjs = require('uglify-js')
+catch error
+    uglifyjs = null
 
 
-uglify = (instream, keep_fnames) ->
+uglify_ = (instream, {keep_fnames = false}) ->
     jscode = ""
     outstream = new Readable()
     instream.on('readable', ->
@@ -52,6 +55,14 @@ uglify = (instream, keep_fnames) ->
                 compress: {keep_fnames}
                 mangle: {keep_fnames}
             })
+
+            if minjs.error
+                # Simply rejecting minjs.error would only show its message and
+                # not the rest of the metadata
+                console.error(minjs.error)
+                reject(minjs.error)
+                return
+
             outstream.push(minjs.code)
             # https://stackoverflow.com/a/22085851
             outstream.push(null)
@@ -72,8 +83,9 @@ module.exports.jspack = (entry, bundlepath, {
     sassify = false
     lessify = false
     debug = false
-    uglify_keep_fnames = false
     licensify = false
+    # Note how 'uglify' is then used to configure 'uglify_'
+    uglify = false
 }) ->
     bfy = browserify(entry, {
         extensions: ['.js', '.coffee']
@@ -121,8 +133,10 @@ module.exports.jspack = (entry, bundlepath, {
 
     jsstream = bfy.bundle()
 
-    if not debug
-        jsstream = await uglify(jsstream, uglify_keep_fnames)
+    if uglify
+        if not uglifyjs
+            throw new Error("'uglify-js' is not installed")
+        jsstream = await uglify_(jsstream, uglify)
 
     outstream = jsstream.pipe(fs.createWriteStream(bundlepath))
 
