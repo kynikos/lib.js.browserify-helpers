@@ -15,7 +15,10 @@ babelify = require('babelify')
 #     require('babel-plugin-transform-es2015-parameters')
 transform_object_rest_spread =
     require('babel-plugin-transform-object-rest-spread')
-coffeeify = require('coffeeify')
+try
+    coffeeify_ = require('coffeeify')
+catch error
+    coffeeify_ = null
 try
     envify_ = require('envify/custom')
 catch error
@@ -78,6 +81,7 @@ uglify_ = (instream, {keep_fnames = false}) ->
 module.exports.jspack = (entry, bundlepath, {
     require = null
     external = []
+    coffeeify = false
     # Note how 'envify' is then used to configure 'envify_'
     envify = false
     sassify = false
@@ -98,7 +102,10 @@ module.exports.jspack = (entry, bundlepath, {
     for extfile in external
         bfy.external(extfile)
 
-    bfy.transform(coffeeify)
+    if coffeeify
+        if not coffeeify_
+            throw new Error("'coffeeify' is not installed")
+        bfy.transform(coffeeify_)
 
     if envify
         if not envify_
