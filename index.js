@@ -95,8 +95,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
           output: {
             comments: 'some'
           },
-          compress: { keep_fnames: keep_fnames },
-          mangle: { keep_fnames: keep_fnames }
+          keep_fnames: keep_fnames
         });
         if (minjs.error) {
           // Simply rejecting minjs.error would only show its message and

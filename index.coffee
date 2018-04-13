@@ -55,8 +55,7 @@ uglify_ = (instream, {keep_fnames = false}) ->
             # NOTE: Also Uglify's 'preamble' option is interesting
             minjs = uglifyjs.minify(jscode, {
                 output: {comments: 'some'}
-                compress: {keep_fnames}
-                mangle: {keep_fnames}
+                keep_fnames
             })
 
             if minjs.error
