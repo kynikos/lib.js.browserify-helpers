@@ -15,6 +15,10 @@ try
 catch
 
 try
+    babelPlugins.push(require('babel-plugin-transform-class-properties'))
+catch
+
+try
     coffeeify_ = require('coffeeify')
 catch
 

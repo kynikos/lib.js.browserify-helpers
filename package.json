@@ -21,6 +21,7 @@
     "browserify": "^16.1.1"
   },
   "optionalDependencies": {
+    "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "coffeeify": "^3.0.1",
     "envify": "^4.1.0",

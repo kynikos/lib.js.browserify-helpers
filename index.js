@@ -30,6 +30,10 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
   } catch (error1) {}
 
   try {
+    babelPlugins.push(require('babel-plugin-transform-class-properties'));
+  } catch (error1) {}
+
+  try {
     coffeeify_ = require('coffeeify');
   } catch (error1) {}
 
