@@ -8,37 +8,35 @@ fs = require('fs')
 {Readable} = require('stream')
 browserify = require('browserify')
 babelify = require('babelify')
-# NOTE: Compiling ES6 may also require the following plugins
-# transform_es2015_destructuring =
-#     require('babel-plugin-transform-es2015-destructuring')
-# transform_es2015_parameters =
-#     require('babel-plugin-transform-es2015-parameters')
-transform_object_rest_spread =
-    require('babel-plugin-transform-object-rest-spread')
+babelPlugins = []
+
+try
+    babelPlugins.push(require('babel-plugin-transform-object-rest-spread'))
+catch
+
 try
     coffeeify_ = require('coffeeify')
-catch error
-    coffeeify_ = null
+catch
+
 try
     envify_ = require('envify/custom')
-catch error
-    envify_ = null
+catch
+
 try
     sassify_ = require('sassify')
-catch error
-    sassify_ = null
+catch
+
 try
     lessify_ = require('lessify')
-catch error
-    lessify_ = null
+catch
+
 try
     licensify_ = require('licensify')
-catch error
-    licensify_ = null
+catch
+
 try
     uglifyjs = require('uglify-js')
-catch error
-    uglifyjs = null
+catch
 
 
 uglify_ = (instream, {keep_fnames = false}) ->
@@ -130,9 +128,7 @@ module.exports.jspack = (entry, bundlepath, {
         presets: ['env']
         # Yes, it is needed to repeat the 'extensions' option here
         extensions: ['.js', '.coffee']
-        plugins: [
-            transform_object_rest_spread
-        ]
+        plugins: babelPlugins
         comments: false
         compact: false
     })
