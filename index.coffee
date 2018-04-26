@@ -19,6 +19,10 @@ try
 catch
 
 try
+    babelPlugins.push(require('babel-plugin-transform-decorators'))
+catch
+
+try
     coffeeify_ = require('coffeeify')
 catch
 
