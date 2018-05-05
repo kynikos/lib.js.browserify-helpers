@@ -31,6 +31,10 @@ try
 catch
 
 try
+    cssify_ = require('cssify')
+catch
+
+try
     sassify_ = require('sassify')
 catch
 
@@ -89,6 +93,7 @@ module.exports.jspack = (entry, bundlepath, {
     coffeeify = false
     # Note how 'envify' is then used to configure 'envify_'
     envify = false
+    cssify = false
     sassify = false
     lessify = false
     debug = false
@@ -116,6 +121,11 @@ module.exports.jspack = (entry, bundlepath, {
         if not envify_
             throw new Error("'envify' is not installed")
         bfy.transform(envify_(envify), {global: true})
+
+    if cssify
+        if not cssify_
+            throw new Error("'cssify' is not installed")
+        bfy.transform(cssify_, {global: true})
 
     if sassify
         if not sassify_

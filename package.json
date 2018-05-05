@@ -24,6 +24,7 @@
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "coffeeify": "^3.0.1",
+    "cssify": "^1.0.3",
     "envify": "^4.1.0",
     "lessify": "^1.0.1",
     "licensify": "^3.1.3",
