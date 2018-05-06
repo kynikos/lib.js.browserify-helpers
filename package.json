@@ -32,9 +32,9 @@
     "uglify-js": "^3.3.18"
   },
   "devDependencies": {
-    "babel-core": "^6.26.0",
+    "babel-core": "^6.26.3",
     "coffeelint": "^2.1.0",
-    "coffeescript": "^2.2.4"
+    "coffeescript": "^2.3.0"
   },
   "babel": {
     "presets": [
