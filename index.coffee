@@ -34,8 +34,15 @@ try
     cssify_ = require('cssify')
 catch
 
+# sassify vs. scssify: try both, for example sassify seems to have problem with
+# escaped characters such as "\e604" (it drops the backslash)
+
 try
     sassify_ = require('sassify')
+catch
+
+try
+    scssify_ = require('scssify')
 catch
 
 try
@@ -95,6 +102,7 @@ module.exports.jspack = (entry, bundlepath, {
     envify = false
     cssify = false
     sassify = false
+    scssify = false
     lessify = false
     debug = false
     licensify = false
@@ -131,6 +139,11 @@ module.exports.jspack = (entry, bundlepath, {
         if not sassify_
             throw new Error("'sassify' is not installed")
         bfy.transform(sassify_, {global: true})
+
+    if scssify
+        if not scssify_
+            throw new Error("'scssify' is not installed")
+        bfy.transform(scssify_, {global: true})
 
     if lessify
         if not lessify_
