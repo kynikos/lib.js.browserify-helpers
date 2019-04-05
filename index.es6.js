@@ -64,14 +64,14 @@ try {
   licensify_ = require('licensify')
 } catch (error9) {}
 
-let uglifyjs
+let Terser
 try {
-  uglifyjs = require('uglify-js')
+  Terser = require('terser')
 } catch (error10) {}
 /* eslint-enable global-require */
 
 
-const uglify_ = function (instream, {keep_fnames = false}) {
+const compress_ = function (instream, {keep_fnames = false}) {
   let jscode = ''
   const outstream = new Readable()
   instream.on('readable', () => {
@@ -80,11 +80,10 @@ const uglify_ = function (instream, {keep_fnames = false}) {
       jscode += buffer.toString()
     }
   })
-  const uglifying = new Promise((resolve, reject) => {
+  const compressing = new Promise((resolve, reject) => {
     instream.on('end', () => {
-      // A way to see all available options is https://skalman.github.io/UglifyJS-online/
-      // NOTE: Also Uglify's 'preamble' option is interesting
-      const minjs = uglifyjs.minify(jscode, {
+      // NOTE: Also Terser's 'preamble' option is interesting
+      const minjs = Terser.minify(jscode, {
         output: {comments: 'some'},
         keep_fnames,
       })
@@ -103,11 +102,11 @@ const uglify_ = function (instream, {keep_fnames = false}) {
     })
     return instream.on('error', (error) => reject(error))
   })
-  return uglifying
+  return compressing
 }
 
 
-module.exports.jspack = async function (entry, bundlepath, {
+module.exports.jspack = async function (entry, bundlepath, { // eslint-disable-line complexity
   require = null,
   external = [],
   coffeeify = false,
@@ -119,8 +118,8 @@ module.exports.jspack = async function (entry, bundlepath, {
   lessify = false,
   debug = false,
   licensify = false,
-  // Note how 'uglify' is then used to configure 'uglify_'
-  uglify = false,
+  // Note how 'compress' is then used to configure 'compress_'
+  compress = false,
 }) {
   const bfy = browserify(entry, {
     extensions: ['.js', '.coffee'],
@@ -195,11 +194,11 @@ module.exports.jspack = async function (entry, bundlepath, {
 
   let jsstream = bfy.bundle()
 
-  if (uglify) {
-    if (!uglifyjs) {
-      throw new Error("'uglify-js' is not installed")
+  if (compress) {
+    if (!Terser) {
+      throw new Error("'terser' is not installed")
     }
-    jsstream = await uglify_(jsstream, uglify)
+    jsstream = await compress_(jsstream, compress)
   }
 
   const outstream = jsstream.pipe(fs.createWriteStream(bundlepath))

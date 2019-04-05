@@ -80,15 +80,15 @@ try {
   licensify_ = require('licensify');
 } catch (error9) {}
 
-var uglifyjs;
+var Terser;
 
 try {
-  uglifyjs = require('uglify-js');
+  Terser = require('terser');
 } catch (error10) {}
 /* eslint-enable global-require */
 
 
-var uglify_ = function uglify_(instream, _ref) {
+var compress_ = function compress_(instream, _ref) {
   var _ref$keep_fnames = _ref.keep_fnames,
       keep_fnames = _ref$keep_fnames === void 0 ? false : _ref$keep_fnames;
   var jscode = '';
@@ -100,11 +100,10 @@ var uglify_ = function uglify_(instream, _ref) {
       jscode += buffer.toString();
     }
   });
-  var uglifying = new Promise(function (resolve, reject) {
+  var compressing = new Promise(function (resolve, reject) {
     instream.on('end', function () {
-      // A way to see all available options is https://skalman.github.io/UglifyJS-online/
-      // NOTE: Also Uglify's 'preamble' option is interesting
-      var minjs = uglifyjs.minify(jscode, {
+      // NOTE: Also Terser's 'preamble' option is interesting
+      var minjs = Terser.minify(jscode, {
         output: {
           comments: 'some'
         },
@@ -127,7 +126,7 @@ var uglify_ = function uglify_(instream, _ref) {
       return reject(error);
     });
   });
-  return uglifying;
+  return compressing;
 };
 
 module.exports.jspack =
@@ -136,13 +135,13 @@ function () {
   var _ref3 = _asyncToGenerator(
   /*#__PURE__*/
   regeneratorRuntime.mark(function _callee(entry, bundlepath, _ref2) {
-    var _ref2$require, require, _ref2$external, external, _ref2$coffeeify, coffeeify, _ref2$envify, envify, _ref2$cssify, cssify, _ref2$sassify, sassify, _ref2$scssify, scssify, _ref2$lessify, lessify, _ref2$debug, debug, _ref2$licensify, licensify, _ref2$uglify, uglify, bfy, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, extfile, jsstream, outstream;
+    var _ref2$require, require, _ref2$external, external, _ref2$coffeeify, coffeeify, _ref2$envify, envify, _ref2$cssify, cssify, _ref2$sassify, sassify, _ref2$scssify, scssify, _ref2$lessify, lessify, _ref2$debug, debug, _ref2$licensify, licensify, _ref2$compress, compress, bfy, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, extfile, jsstream, outstream;
 
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            _ref2$require = _ref2.require, require = _ref2$require === void 0 ? null : _ref2$require, _ref2$external = _ref2.external, external = _ref2$external === void 0 ? [] : _ref2$external, _ref2$coffeeify = _ref2.coffeeify, coffeeify = _ref2$coffeeify === void 0 ? false : _ref2$coffeeify, _ref2$envify = _ref2.envify, envify = _ref2$envify === void 0 ? false : _ref2$envify, _ref2$cssify = _ref2.cssify, cssify = _ref2$cssify === void 0 ? false : _ref2$cssify, _ref2$sassify = _ref2.sassify, sassify = _ref2$sassify === void 0 ? false : _ref2$sassify, _ref2$scssify = _ref2.scssify, scssify = _ref2$scssify === void 0 ? false : _ref2$scssify, _ref2$lessify = _ref2.lessify, lessify = _ref2$lessify === void 0 ? false : _ref2$lessify, _ref2$debug = _ref2.debug, debug = _ref2$debug === void 0 ? false : _ref2$debug, _ref2$licensify = _ref2.licensify, licensify = _ref2$licensify === void 0 ? false : _ref2$licensify, _ref2$uglify = _ref2.uglify, uglify = _ref2$uglify === void 0 ? false : _ref2$uglify;
+            _ref2$require = _ref2.require, require = _ref2$require === void 0 ? null : _ref2$require, _ref2$external = _ref2.external, external = _ref2$external === void 0 ? [] : _ref2$external, _ref2$coffeeify = _ref2.coffeeify, coffeeify = _ref2$coffeeify === void 0 ? false : _ref2$coffeeify, _ref2$envify = _ref2.envify, envify = _ref2$envify === void 0 ? false : _ref2$envify, _ref2$cssify = _ref2.cssify, cssify = _ref2$cssify === void 0 ? false : _ref2$cssify, _ref2$sassify = _ref2.sassify, sassify = _ref2$sassify === void 0 ? false : _ref2$sassify, _ref2$scssify = _ref2.scssify, scssify = _ref2$scssify === void 0 ? false : _ref2$scssify, _ref2$lessify = _ref2.lessify, lessify = _ref2$lessify === void 0 ? false : _ref2$lessify, _ref2$debug = _ref2.debug, debug = _ref2$debug === void 0 ? false : _ref2$debug, _ref2$licensify = _ref2.licensify, licensify = _ref2$licensify === void 0 ? false : _ref2$licensify, _ref2$compress = _ref2.compress, compress = _ref2$compress === void 0 ? false : _ref2$compress;
             bfy = browserify(entry, {
               extensions: ['.js', '.coffee'],
               debug: debug
@@ -175,8 +174,8 @@ function () {
             _context.prev = 14;
             _context.prev = 15;
 
-            if (!_iteratorNormalCompletion && _iterator.return != null) {
-              _iterator.return();
+            if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+              _iterator["return"]();
             }
 
           case 17:
@@ -328,21 +327,21 @@ function () {
             });
             jsstream = bfy.bundle();
 
-            if (!uglify) {
+            if (!compress) {
               _context.next = 58;
               break;
             }
 
-            if (uglifyjs) {
+            if (Terser) {
               _context.next = 55;
               break;
             }
 
-            throw new Error("'uglify-js' is not installed");
+            throw new Error("'terser' is not installed");
 
           case 55:
             _context.next = 57;
-            return uglify_(jsstream, uglify);
+            return compress_(jsstream, compress);
 
           case 57:
             jsstream = _context.sent;
