@@ -109,6 +109,7 @@ function compress_(instream, {keep_fnames = false}) {
 module.exports.jspack = async function (entry, bundlepath, { // eslint-disable-line complexity
   require = null,
   external = [],
+  extensions = ['.js', '.coffee'],
   coffeeify = false,
   // Note how 'envify' is then used to configure 'envify_'
   envify = false,
@@ -122,7 +123,7 @@ module.exports.jspack = async function (entry, bundlepath, { // eslint-disable-l
   compress = false,
 }) {
   const bfy = browserify(entry, {
-    extensions: ['.js', '.coffee'],
+    extensions,
     debug,
   })
 
@@ -186,7 +187,7 @@ module.exports.jspack = async function (entry, bundlepath, { // eslint-disable-l
   bfy.transform(babelify, {
     presets: ['@babel/preset-env'],
     // Yes, it is needed to repeat the 'extensions' option here
-    extensions: ['.js', '.coffee'],
+    extensions,
     plugins: babelPlugins,
     comments: false,
     compact: false,
