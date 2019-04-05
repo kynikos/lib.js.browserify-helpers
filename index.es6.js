@@ -110,6 +110,7 @@ module.exports.jspack = async function (entry, bundlepath, { // eslint-disable-l
   require = null,
   external = [],
   extensions = ['.js', '.coffee'],
+  babelConf = {},
   coffeeify = false,
   // Note how 'envify' is then used to configure 'envify_'
   envify = false,
@@ -191,6 +192,7 @@ module.exports.jspack = async function (entry, bundlepath, { // eslint-disable-l
     plugins: babelPlugins,
     comments: false,
     compact: false,
+    ...babelConf,
   })
 
   let jsstream = bfy.bundle()

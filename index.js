@@ -1,5 +1,9 @@
 "use strict";
 
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
@@ -88,7 +92,7 @@ try {
 /* eslint-enable global-require */
 
 
-var compress_ = function compress_(instream, _ref) {
+function compress_(instream, _ref) {
   var _ref$keep_fnames = _ref.keep_fnames,
       keep_fnames = _ref$keep_fnames === void 0 ? false : _ref$keep_fnames;
   var jscode = '';
@@ -127,7 +131,7 @@ var compress_ = function compress_(instream, _ref) {
     });
   });
   return compressing;
-};
+}
 
 module.exports.jspack =
 /*#__PURE__*/
@@ -135,15 +139,15 @@ function () {
   var _ref3 = _asyncToGenerator(
   /*#__PURE__*/
   regeneratorRuntime.mark(function _callee(entry, bundlepath, _ref2) {
-    var _ref2$require, require, _ref2$external, external, _ref2$coffeeify, coffeeify, _ref2$envify, envify, _ref2$cssify, cssify, _ref2$sassify, sassify, _ref2$scssify, scssify, _ref2$lessify, lessify, _ref2$debug, debug, _ref2$licensify, licensify, _ref2$compress, compress, bfy, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, extfile, jsstream, outstream;
+    var _ref2$require, require, _ref2$external, external, _ref2$extensions, extensions, _ref2$babelConf, babelConf, _ref2$coffeeify, coffeeify, _ref2$envify, envify, _ref2$cssify, cssify, _ref2$sassify, sassify, _ref2$scssify, scssify, _ref2$lessify, lessify, _ref2$debug, debug, _ref2$licensify, licensify, _ref2$compress, compress, bfy, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, extfile, jsstream, outstream;
 
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            _ref2$require = _ref2.require, require = _ref2$require === void 0 ? null : _ref2$require, _ref2$external = _ref2.external, external = _ref2$external === void 0 ? [] : _ref2$external, _ref2$coffeeify = _ref2.coffeeify, coffeeify = _ref2$coffeeify === void 0 ? false : _ref2$coffeeify, _ref2$envify = _ref2.envify, envify = _ref2$envify === void 0 ? false : _ref2$envify, _ref2$cssify = _ref2.cssify, cssify = _ref2$cssify === void 0 ? false : _ref2$cssify, _ref2$sassify = _ref2.sassify, sassify = _ref2$sassify === void 0 ? false : _ref2$sassify, _ref2$scssify = _ref2.scssify, scssify = _ref2$scssify === void 0 ? false : _ref2$scssify, _ref2$lessify = _ref2.lessify, lessify = _ref2$lessify === void 0 ? false : _ref2$lessify, _ref2$debug = _ref2.debug, debug = _ref2$debug === void 0 ? false : _ref2$debug, _ref2$licensify = _ref2.licensify, licensify = _ref2$licensify === void 0 ? false : _ref2$licensify, _ref2$compress = _ref2.compress, compress = _ref2$compress === void 0 ? false : _ref2$compress;
+            _ref2$require = _ref2.require, require = _ref2$require === void 0 ? null : _ref2$require, _ref2$external = _ref2.external, external = _ref2$external === void 0 ? [] : _ref2$external, _ref2$extensions = _ref2.extensions, extensions = _ref2$extensions === void 0 ? ['.js', '.coffee'] : _ref2$extensions, _ref2$babelConf = _ref2.babelConf, babelConf = _ref2$babelConf === void 0 ? {} : _ref2$babelConf, _ref2$coffeeify = _ref2.coffeeify, coffeeify = _ref2$coffeeify === void 0 ? false : _ref2$coffeeify, _ref2$envify = _ref2.envify, envify = _ref2$envify === void 0 ? false : _ref2$envify, _ref2$cssify = _ref2.cssify, cssify = _ref2$cssify === void 0 ? false : _ref2$cssify, _ref2$sassify = _ref2.sassify, sassify = _ref2$sassify === void 0 ? false : _ref2$sassify, _ref2$scssify = _ref2.scssify, scssify = _ref2$scssify === void 0 ? false : _ref2$scssify, _ref2$lessify = _ref2.lessify, lessify = _ref2$lessify === void 0 ? false : _ref2$lessify, _ref2$debug = _ref2.debug, debug = _ref2$debug === void 0 ? false : _ref2$debug, _ref2$licensify = _ref2.licensify, licensify = _ref2$licensify === void 0 ? false : _ref2$licensify, _ref2$compress = _ref2.compress, compress = _ref2$compress === void 0 ? false : _ref2$compress;
             bfy = browserify(entry, {
-              extensions: ['.js', '.coffee'],
+              extensions: extensions,
               debug: debug
             });
 
@@ -317,14 +321,14 @@ function () {
             bfy.plugin(licensify_);
 
           case 50:
-            bfy.transform(babelify, {
+            bfy.transform(babelify, _objectSpread({
               presets: ['@babel/preset-env'],
               // Yes, it is needed to repeat the 'extensions' option here
-              extensions: ['.js', '.coffee'],
+              extensions: extensions,
               plugins: babelPlugins,
               comments: false,
               compact: false
-            });
+            }, babelConf));
             jsstream = bfy.bundle();
 
             if (!compress) {
