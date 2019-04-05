@@ -71,7 +71,7 @@ try {
 /* eslint-enable global-require */
 
 
-const compress_ = function (instream, {keep_fnames = false}) {
+function compress_(instream, {keep_fnames = false}) {
   let jscode = ''
   const outstream = new Readable()
   instream.on('readable', () => {
