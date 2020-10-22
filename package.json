@@ -15,10 +15,10 @@
     "compile": "./node_modules/.bin/babel index.es6.js --out-file index.js"
   },
   "dependencies": {
-    "@babel/polyfill": "^7.4.3",
-    "@babel/preset-env": "^7.4.3",
+    "@babel/polyfill": "^7.12.1",
+    "@babel/preset-env": "^7.12.1",
     "babelify": "^10.0.0",
-    "browserify": "^16.2.3"
+    "browserify": "^16.5.2"
   },
   "optionalDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.4.0",
@@ -33,10 +33,10 @@
     "terser": "^3.17.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.4.3",
-    "@babel/core": "^7.4.3",
-    "eslint": "^5.16.0",
-    "eslint-plugin-babel": "^5.3.0"
+    "@babel/cli": "^7.12.1",
+    "@babel/core": "^7.12.3",
+    "eslint": "^7.11.0",
+    "eslint-plugin-babel": "^5.3.1"
   },
   "babel": {
     "presets": [

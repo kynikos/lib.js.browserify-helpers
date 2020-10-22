@@ -1,8 +1,16 @@
 "use strict";
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
@@ -133,13 +141,9 @@ function compress_(instream, _ref) {
   return compressing;
 }
 
-module.exports.jspack =
-/*#__PURE__*/
-function () {
-  var _ref3 = _asyncToGenerator(
-  /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee(entry, bundlepath, _ref2) {
-    var _ref2$require, require, _ref2$external, external, _ref2$extensions, extensions, _ref2$babelConf, babelConf, _ref2$coffeeify, coffeeify, _ref2$envify, envify, _ref2$cssify, cssify, _ref2$sassify, sassify, _ref2$scssify, scssify, _ref2$lessify, lessify, _ref2$debug, debug, _ref2$licensify, licensify, _ref2$compress, compress, bfy, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, extfile, jsstream, outstream;
+module.exports.jspack = /*#__PURE__*/function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(entry, bundlepath, _ref2) {
+    var _ref2$require, require, _ref2$external, external, _ref2$extensions, extensions, _ref2$babelConf, babelConf, _ref2$coffeeify, coffeeify, _ref2$envify, envify, _ref2$cssify, cssify, _ref2$sassify, sassify, _ref2$scssify, scssify, _ref2$lessify, lessify, _ref2$debug, debug, _ref2$licensify, licensify, _ref2$compress, compress, bfy, _iterator, _step, extfile, jsstream, outstream;
 
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
@@ -155,172 +159,141 @@ function () {
               bfy.require(require);
             }
 
-            _iteratorNormalCompletion = true;
-            _didIteratorError = false;
-            _iteratorError = undefined;
-            _context.prev = 6;
+            _iterator = _createForOfIteratorHelper(external);
 
-            for (_iterator = external[Symbol.iterator](); !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-              extfile = _step.value;
-              bfy.external(extfile);
+            try {
+              for (_iterator.s(); !(_step = _iterator.n()).done;) {
+                extfile = _step.value;
+                bfy.external(extfile);
+              }
+            } catch (err) {
+              _iterator.e(err);
+            } finally {
+              _iterator.f();
             }
 
-            _context.next = 14;
-            break;
-
-          case 10:
-            _context.prev = 10;
-            _context.t0 = _context["catch"](6);
-            _didIteratorError = true;
-            _iteratorError = _context.t0;
-
-          case 14:
-            _context.prev = 14;
-            _context.prev = 15;
-
-            if (!_iteratorNormalCompletion && _iterator["return"] != null) {
-              _iterator["return"]();
-            }
-
-          case 17:
-            _context.prev = 17;
-
-            if (!_didIteratorError) {
-              _context.next = 20;
-              break;
-            }
-
-            throw _iteratorError;
-
-          case 20:
-            return _context.finish(17);
-
-          case 21:
-            return _context.finish(14);
-
-          case 22:
             if (!coffeeify) {
-              _context.next = 26;
+              _context.next = 9;
               break;
             }
 
             if (coffeeify_) {
-              _context.next = 25;
+              _context.next = 8;
               break;
             }
 
             throw new Error("'coffeeify' is not installed");
 
-          case 25:
+          case 8:
             bfy.transform(coffeeify_);
 
-          case 26:
+          case 9:
             if (!envify) {
-              _context.next = 30;
+              _context.next = 13;
               break;
             }
 
             if (envify_) {
-              _context.next = 29;
+              _context.next = 12;
               break;
             }
 
             throw new Error("'envify' is not installed");
 
-          case 29:
+          case 12:
             bfy.transform(envify_(envify), {
               global: true
             });
 
-          case 30:
+          case 13:
             if (!cssify) {
-              _context.next = 34;
+              _context.next = 17;
               break;
             }
 
             if (cssify_) {
-              _context.next = 33;
+              _context.next = 16;
               break;
             }
 
             throw new Error("'cssify' is not installed");
 
-          case 33:
+          case 16:
             bfy.transform(cssify_, {
               global: true
             });
 
-          case 34:
+          case 17:
             if (!sassify) {
-              _context.next = 38;
+              _context.next = 21;
               break;
             }
 
             if (sassify_) {
-              _context.next = 37;
+              _context.next = 20;
               break;
             }
 
             throw new Error("'sassify' is not installed");
 
-          case 37:
+          case 20:
             bfy.transform(sassify_, {
               global: true
             });
 
-          case 38:
+          case 21:
             if (!scssify) {
-              _context.next = 42;
+              _context.next = 25;
               break;
             }
 
             if (scssify_) {
-              _context.next = 41;
+              _context.next = 24;
               break;
             }
 
             throw new Error("'scssify' is not installed");
 
-          case 41:
+          case 24:
             bfy.transform(scssify_, {
               global: true
             });
 
-          case 42:
+          case 25:
             if (!lessify) {
-              _context.next = 46;
+              _context.next = 29;
               break;
             }
 
             if (lessify_) {
-              _context.next = 45;
+              _context.next = 28;
               break;
             }
 
             throw new Error("'lessify' is not installed");
 
-          case 45:
+          case 28:
             bfy.transform(lessify_, {
               global: true
             });
 
-          case 46:
+          case 29:
             if (!licensify) {
-              _context.next = 50;
+              _context.next = 33;
               break;
             }
 
             if (licensify_) {
-              _context.next = 49;
+              _context.next = 32;
               break;
             }
 
             throw new Error("'licensify' is not installed");
 
-          case 49:
+          case 32:
             bfy.plugin(licensify_);
 
-          case 50:
+          case 33:
             bfy.transform(babelify, _objectSpread({
               presets: ['@babel/preset-env'],
               // Yes, it is needed to repeat the 'extensions' option here
@@ -332,25 +305,25 @@ function () {
             jsstream = bfy.bundle();
 
             if (!compress) {
-              _context.next = 58;
+              _context.next = 41;
               break;
             }
 
             if (Terser) {
-              _context.next = 55;
+              _context.next = 38;
               break;
             }
 
             throw new Error("'terser' is not installed");
 
-          case 55:
-            _context.next = 57;
+          case 38:
+            _context.next = 40;
             return compress_(jsstream, compress);
 
-          case 57:
+          case 40:
             jsstream = _context.sent;
 
-          case 58:
+          case 41:
             outstream = jsstream.pipe(fs.createWriteStream(bundlepath));
             return _context.abrupt("return", new Promise(function (resolve, reject) {
               outstream.on('close', function () {
@@ -361,12 +334,12 @@ function () {
               });
             }));
 
-          case 60:
+          case 43:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[6, 10, 14, 22], [15,, 17, 21]]);
+    }, _callee);
   }));
 
   return function (_x, _x2, _x3) {
